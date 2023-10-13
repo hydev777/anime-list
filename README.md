@@ -1,3 +1,3 @@
 # anime_list
 
-A Flutter app implemted using TDD and Clean Architecture.
+A Flutter app implemented using TDD and Clean Architecture.
