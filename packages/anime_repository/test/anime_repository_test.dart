@@ -11,6 +11,7 @@ class MockHttpClient extends Mock implements http.Client {}
 void main() {
   late Uri animesUrl;
   late Uri animesDetailUrl;
+  late Uri characterQuotesUrl;
 
   group("Anime", () {
     late http.Client httpClient;
@@ -53,6 +54,34 @@ void main() {
       ],
     );
 
+    final characterQuotes = CharacterQuotes(
+      id: 1,
+      animeId: 2,
+      animeImage:
+          "https://ami.animecharactersdatabase.com/productimages/u/5524-835244276.jpg",
+      characterImage:
+          "https://ami.animecharactersdatabase.com/uploads/chars/thumbs/200/5524-813006538.jpg",
+      origin: "Problem children are coming from another world, aren't they?",
+      gender: "Female",
+      name: "Asuka Kudou",
+      desc:
+          "Asuka Kudou is a character from the Anime Problem children are coming from another world, aren't they?.",
+      quotes: List.generate(
+        4,
+        (index) => Quote(
+          series:
+              "Problem children are coming from another world, aren't they?",
+          lineId: 3,
+          srtId: 4,
+          epid: 5,
+          pid: 6,
+          quoteUrl:
+              "https://www.animecharactersdatabase.com/animequotes.php?line_id=5515",
+          subLine: "Hey, you.",
+        ),
+      ),
+    );
+
     setUp(() {
       httpClient = MockHttpClient();
       subject = AnimeRepository(httpClient: httpClient);
@@ -65,6 +94,11 @@ void main() {
         AnimeRepository.authority,
         "/api_series_characters.php",
         {"anime_id": "1"},
+      );
+      characterQuotesUrl = Uri.https(
+        AnimeRepository.authority,
+        "/api_series_characters.php",
+        {"character_quotes": "1"},
       );
     });
 
@@ -119,7 +153,7 @@ void main() {
       });
     });
 
-    group("fetch anime details", () {
+    group("fetch anime characters", () {
       setUp(() {
         when(() => httpClient.get(animesDetailUrl)).thenAnswer(
           (_) async => http.Response(
@@ -153,7 +187,7 @@ void main() {
       });
 
       test("makes correct request", () async {
-        await subject.getAnime("1");
+        await subject.getAnimeCharacters("1");
 
         verify(
           () => httpClient.get(animesDetailUrl),
@@ -161,11 +195,62 @@ void main() {
       });
 
       test("get anime details", () async {
-        final animeDetailsResponse = await subject.getAnime("1");
+        final animeDetailsResponse = await subject.getAnimeCharacters("1");
 
         expect(
           animeDetailsResponse,
           animeDetails,
+        );
+      });
+    });
+
+    group("fetch character quotes", () {
+      setUp(() {
+        when(() => httpClient.get(characterQuotesUrl)).thenAnswer(
+          (_) async => http.Response(
+            json.encode(characterQuotes.toJson()),
+            200,
+          ),
+        );
+      });
+
+      test("throws HttpException when http client throws exception", () {
+        when(() => httpClient.get(characterQuotesUrl)).thenThrow(Exception());
+
+        expect(
+          () => subject.getCharacterQuotes("1"),
+          throwsA(
+            isA<HttpException>(),
+          ),
+        );
+      });
+
+      test("500 response status", () {
+        when(() => httpClient.get(characterQuotesUrl)).thenAnswer(
+          (_) async => http.Response("Server error", 500),
+        );
+      });
+
+      test("400 response status", () {
+        when(() => httpClient.get(characterQuotesUrl)).thenAnswer(
+          (_) async => http.Response("Something went wrong", 400),
+        );
+      });
+
+      test("makes correct request", () async {
+        await subject.getCharacterQuotes("1");
+
+        verify(
+          () => httpClient.get(characterQuotesUrl),
+        ).called(1);
+      });
+
+      test("get character quotes", () async {
+        final characterQuotesResponse = await subject.getCharacterQuotes("1");
+
+        expect(
+          characterQuotesResponse,
+          characterQuotes,
         );
       });
     });

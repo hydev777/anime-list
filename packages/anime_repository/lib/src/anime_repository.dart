@@ -26,14 +26,14 @@ class AnimeRepository {
 
   Future<AnimeList> fetchAnimeList() async {
     http.Response? response;
-    final animeUri = Uri.https(
+    final animeListUri = Uri.https(
       authority,
       '/api_series_characters.php',
       {"title_wiki_links": ""},
     );
 
     try {
-      response = await _httpClient.get(animeUri);
+      response = await _httpClient.get(animeListUri);
     } catch (err) {
       throw HttpException();
     }
@@ -60,16 +60,16 @@ class AnimeRepository {
     }
   }
 
-  Future<AnimeDetails> getAnime(String id) async {
+  Future<AnimeDetails> getAnimeCharacters(String id) async {
     http.Response? response;
-    final animeUri = Uri.https(
+    final animeCharacterslUri = Uri.https(
       authority,
       '/api_series_characters.php',
       {"anime_id": id},
     );
 
     try {
-      response = await _httpClient.get(animeUri);
+      response = await _httpClient.get(animeCharacterslUri);
     } catch (err) {
       throw HttpException();
     }
@@ -95,6 +95,54 @@ class AnimeRepository {
               ),
             )
             .toList(),
+      );
+    } catch (err) {
+      throw JsonDecodeException();
+    }
+  }
+
+  Future<CharacterQuotes> getCharacterQuotes(String characterId) async {
+    http.Response? response;
+    final characterQuotesUri = Uri.https(
+      authority,
+      '/api_series_characters.php',
+      {"character_quotes": characterId},
+    );
+
+    try {
+      response = await _httpClient.get(characterQuotesUri);
+    } catch (err) {
+      throw HttpException();
+    }
+
+    if (response.statusCode != 200) {
+      throw HttpRequestFailure(response.statusCode);
+    }
+
+    try {
+      final body = json.decode(response.body) as Map<String, dynamic>;
+      return CharacterQuotes(
+        animeId: body["anime_id"],
+        animeImage: body["anime_image"],
+        origin: body["origin"],
+        quotes: (body["quotes"] as List<dynamic>)
+            .map(
+              (quote) => Quote(
+                series: quote["SERIES"],
+                lineId: quote["LINE_ID"],
+                srtId: quote["SRT_ID"],
+                epid: quote["EPID"],
+                pid: quote["PID"],
+                quoteUrl: quote["QUOTE_URL"],
+                subLine: quote["SUB_LINE"],
+              ),
+            )
+            .toList(),
+        id: body["id"],
+        name: body["name"],
+        characterImage: body["character_image"],
+        gender: body["gender"],
+        desc: body["desc"],
       );
     } catch (err) {
       throw JsonDecodeException();
