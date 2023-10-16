@@ -61,9 +61,9 @@ void main() {
     );
 
     blocTest<AnimeDetailsCubit, AnimeDetailsState>(
-      "anime details is complete",
+      "anime characters is complete",
       build: () {
-        when(() => animeRepository.getAnime("1"))
+        when(() => animeRepository.getAnimeCharacters("1"))
             .thenAnswer((_) async => animeDetails);
 
         return AnimeDetailsCubit(

@@ -22,7 +22,7 @@ class AnimeDetailsCubit extends Cubit<AnimeDetailsState> {
     );
 
     try {
-      final animeDetails = await _animeRepository.getAnime(id);
+      final animeDetails = await _animeRepository.getAnimeCharacters(id);
 
       emit(
         state.copyWith(
