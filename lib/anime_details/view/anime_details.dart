@@ -17,15 +17,11 @@ class AnimeDetails extends StatefulWidget {
 }
 
 class _AnimeDetailsState extends State<AnimeDetails> {
-  bool _stretch = true;
-
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      print("========================>>> ${widget.animeId}");
-
       await context
           .read<AnimeDetailsCubit>()
           .fetchAnimeDetails(widget.animeId!);
@@ -36,15 +32,6 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        // appBar: AppBar(
-        //   title: const Text("Anime details"),
-        //   leading: IconButton(
-        //     onPressed: () {
-        //       context.pop();
-        //     },
-        //     icon: const Icon(Icons.arrow_back),
-        //   ),
-        // ),
         body: BlocBuilder<AnimeDetailsCubit, AnimeDetailsState>(
           builder: (context, state) {
             if (state.animeDetailsStatus == AnimeDetailsStatus.loading) {
@@ -58,8 +45,9 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                 physics: const BouncingScrollPhysics(),
                 slivers: [
                   SliverAppBar(
+                    stretch: true,
                     onStretchTrigger: () async {},
-                    // stretchTriggerOffset: 300.0,
+                    stretchTriggerOffset: 300.0,
                     expandedHeight: 250.0,
                     flexibleSpace: FlexibleSpaceBar(
                       background: Image.network(
