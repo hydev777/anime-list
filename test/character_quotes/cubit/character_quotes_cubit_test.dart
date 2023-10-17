@@ -63,7 +63,7 @@ void main() {
     );
 
     blocTest<CharacterQuotesCubit, CharacterQuotesState>(
-      "anime list is complete",
+      "anime quotes is complete",
       build: () {
         when(() => animeRepository.getCharacterQuotes("1")).thenAnswer(
           (_) async => characterQuotes,
