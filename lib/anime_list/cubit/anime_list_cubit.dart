@@ -14,7 +14,7 @@ class AnimeListCubit extends Cubit<AnimeListState> {
 
   final AnimeRepository _animeRepository;
 
-  Future<void> fetchAnimeList() async {
+  Future<void> onFetchAnimeList() async {
     emit(
       state.copyWith(
         animeListStatus: AnimeListStatus.loading,

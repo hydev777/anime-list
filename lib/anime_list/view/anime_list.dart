@@ -16,7 +16,7 @@ class _AnimeListState extends State<AnimeList> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await context.read<AnimeListCubit>().fetchAnimeList();
+      await context.read<AnimeListCubit>().onFetchAnimeList();
     });
   }
 

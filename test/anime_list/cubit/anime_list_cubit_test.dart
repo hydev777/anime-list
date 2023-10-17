@@ -34,7 +34,7 @@ void main() {
           animeRepository: animeRepository,
         );
       },
-      act: (bloc) => bloc.fetchAnimeList(),
+      act: (bloc) => bloc.onFetchAnimeList(),
       expect: () => [
         const AnimeListState(
           animeListStatus: AnimeListStatus.loading,
@@ -56,7 +56,7 @@ void main() {
           animeRepository: animeRepository,
         );
       },
-      act: (bloc) => bloc.fetchAnimeList(),
+      act: (bloc) => bloc.onFetchAnimeList(),
       expect: () => [
         const AnimeListState(
           animeListStatus: AnimeListStatus.loading,
@@ -78,7 +78,7 @@ void main() {
           animeRepository: animeRepository,
         );
       },
-      act: (bloc) => bloc.fetchAnimeList(),
+      act: (bloc) => bloc.onFetchAnimeList(),
       expect: () => [
         const AnimeListState(
           animeListStatus: AnimeListStatus.loading,
